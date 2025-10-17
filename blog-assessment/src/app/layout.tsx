@@ -4,7 +4,6 @@ import Link from "next/link";
 import Script from "next/script";
 import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
-import { Button } from "@/components/ui/button";
 import { Header } from "@/components/header";
 
 const geistSans = Geist({

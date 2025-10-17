@@ -34,9 +34,14 @@ export const categoryRouter = createTRPCRouter({
           .returning();
 
         return inserted[0];
-      } catch (err: any) {
+      } catch (err: unknown) {
         // Postgres unique violation
-        if (err?.code === "23505") {
+        if (
+          typeof err === "object" &&
+          err !== null &&
+          "code" in err &&
+          (err as { code?: string }).code === "23505"
+        ) {
           throw new TRPCError({
             code: "CONFLICT",
             message: "Category name or slug already exists.",
