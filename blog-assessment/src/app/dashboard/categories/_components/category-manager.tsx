@@ -51,7 +51,7 @@ export function CategoryManager() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       {/* Form for creating a new category */}
       <div>
-        <Card>
+        <Card className="h-full">
           <CardHeader>
             <CardTitle>Create New Category</CardTitle>
           </CardHeader>
@@ -82,20 +82,32 @@ export function CategoryManager() {
 
       {/* List of existing categories */}
       <div>
-        <h2 className="text-2xl font-bold mb-4">Existing Categories</h2>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <div className="space-y-4">
-            {categories?.map((category) => (
-              <Card key={category.id}>
-                <CardContent className="p-4">
-                  <p className="font-medium">{category.name}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+        <Card>
+          <CardHeader>
+            <CardTitle>Existing Categories</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-10 rounded bg-muted animate-pulse" />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {categories?.length ? (
+                  categories.map((category) => (
+                    <div key={category.id} className="flex items-center justify-between rounded-md border px-3 py-2">
+                      <p className="font-medium">{category.name}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">No categories yet. Create your first category.</p>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

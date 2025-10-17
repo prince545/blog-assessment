@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Full-Stack Blogging Platform (Assessment)
 
-## Getting Started
+Modern multi-user blogging app built with Next.js 15 App Router, tRPC, Drizzle ORM, and PostgreSQL.
 
-First, run the development server:
+### Tech Stack
+- Next.js 15 (App Router)
+- TypeScript
+- tRPC 11 + React Query
+- Drizzle ORM + PostgreSQL
+- Tailwind CSS v4
+- Zod for validation
 
+### Features
+- Blog post CRUD with category assignment
+- Category CRUD
+- Blog listing with category filtering
+- Individual post view (Markdown rendering)
+- Dashboard for managing posts (draft/published)
+- Loading/error/empty states
+- Responsive layout, dark mode toggle
+
+### Setup
+1) Clone and install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <your-repo>
+cd blog-assessment
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2) Environment variables (`.env.local`)
+```bash
+DATABASE_URL=postgres://user:password@host:port/db
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3) Database and Drizzle
+```bash
+# Generate migrations (after editing schema if needed)
+npx drizzle-kit generate
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Push to database
+npx drizzle-kit push
+```
 
-## Learn More
+4) Run
+```bash
+npm run dev
+# open http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+### tRPC Router Overview
+- `src/server/api/routers/post.ts`
+  - `create`, `list({ categoryId? })`, `getBySlug`, `getById`, `update`, `delete`
+- `src/server/api/routers/category.ts`
+  - `create`, `list`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Inputs validated with Zod; DB writes use transactions; slugs generated from titles/names.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Project Structure
+```text
+src/app
+  ├─ page.tsx                 # Landing
+  ├─ blog/page.tsx            # Listing + filters
+  ├─ blog/[slug]/page.tsx     # Single post
+  ├─ dashboard/page.tsx       # Manage posts
+  ├─ dashboard/categories     # Category manager
+  └─ create-post              # Create post form
+src/server/api/routers        # tRPC routers
+src/db/schema.ts              # Drizzle schema
+```
 
-## Deploy on Vercel
+### Feature Checklist
+Must Have
+- [x] Post CRUD (create, read, update, delete)
+- [x] Category CRUD
+- [x] Assign categories to posts
+- [x] Blog listing page
+- [x] Individual post page
+- [x] Category filtering
+- [x] Responsive navigation
+- [x] Clean, professional UI
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Should Have
+- [x] Landing page (Header/Hero, Features, Footer)
+- [x] Dashboard for posts
+- [x] Draft vs Published
+- [x] Loading and error states
+- [x] Mobile responsive
+- [x] Markdown editor (textarea + renderer)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Nice to Have
+- [x] Dark mode
+- [ ] Search
+- [ ] Reading time / word count
+- [ ] Image upload
+- [ ] Preview mode
+- [ ] SEO meta tags
+- [ ] Pagination
+
+### Deployment
+Deploy with Vercel:
+1) Set `DATABASE_URL` in project settings
+2) Run migrations during build or via Drizzle Studio
+3) `npm run build && npm run start`
+
+### Assumptions & Decisions
+- No auth per spec; all actions public
+- Markdown chosen over rich text for speed
+- Slugs use name/title + timestamp for uniqueness
+
+### Time Spent
+- UI polish and core features: ~12–16 hrs window

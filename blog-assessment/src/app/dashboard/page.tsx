@@ -33,13 +33,16 @@ export default function DashboardPage() {
   });
 
   return (
-    <main className="container mx-auto p-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-bold">Dashboard</h1>
+    <main className="container-page py-10">
+      <div className="flex justify-between items-end gap-4 mb-6">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground">Manage your posts and drafts.</p>
+        </div>
         <Button onClick={() => router.push('/create-post')}>Create New Post</Button>
       </div>
 
-      <div className="rounded-md border">
+      <div className="rounded-md border overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -94,6 +97,13 @@ export default function DashboardPage() {
                 </TableCell>
               </TableRow>
             ))}
+            {!isLoading && (!posts || posts.length === 0) && (
+              <TableRow>
+                <TableCell colSpan={4} className="h-24 text-center text-muted-foreground">
+                  No posts yet. Create your first post to get started.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

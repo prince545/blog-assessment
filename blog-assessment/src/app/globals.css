@@ -121,3 +121,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer base {
+  ::selection {
+    background: var(--ring);
+    color: var(--primary-foreground);
+  }
+  a {
+    @apply underline-offset-4 hover:underline decoration-border;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+}

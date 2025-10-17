@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
+import Script from "next/script";
 import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
+import { Button } from "@/components/ui/button";
+import { Header } from "@/components/header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,12 +28,58 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script id="theme-initializer" strategy="beforeInteractive">
+          {`
+            try {
+              const stored = localStorage.getItem('theme');
+              const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              const shouldUseDark = stored ? stored === 'dark' : prefersDark;
+              const root = document.documentElement;
+              if (shouldUseDark) root.classList.add('dark'); else root.classList.remove('dark');
+            } catch {}
+          `}
+        </Script>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <SiteShell>
+            {children}
+          </SiteShell>
+        </TRPCReactProvider>
       </body>
     </html>
   );
 }
+
+function SiteShell({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6">
+          {children}
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="border-t">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between text-sm text-muted-foreground">
+        <span>© {new Date().getFullYear()} Blogr</span>
+        <div className="flex items-center gap-4">
+          <Link href="/blog" className="hover:text-foreground">Explore</Link>
+          <Link href="/dashboard" className="hover:text-foreground">Dashboard</Link>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
